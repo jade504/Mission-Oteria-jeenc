@@ -10,4 +10,5 @@ for caractere in message :
     dictionnaire.get(cle, valeur_par_defaut)
         message_chiffre.append(nouveau_symbole)
  message[::-1]
+#Je suis passer par la
 
