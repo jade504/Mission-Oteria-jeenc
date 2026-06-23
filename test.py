@@ -8,7 +8,7 @@ cle={symbole: lettre for lettre, symbole in zip(alphabet, symboles)}
 
 message=""
 choix = [ ]
-choix = input ("vous voulez chiffrer ou déchiffrer un message? (chiffré/déchiffré) : ").lower()
+choix = input ("vous voulez chiffrer ou déchiffrer un message? (chiffrer/déchiffrer) : ").lower()
 if choix == 'chiffré':
     message = input("quel est le message que vous voulez chiffrer?")
       
@@ -39,8 +39,8 @@ elif choix == 'déchiffré':
            nouveau_symbole = "e"
         else:
              nouveau_symbole = cle.get(caractere, "")
-        resultat.append(nouveau_symbole)
+    resultat.append(nouveau_symbole)
     resultat = "".join(resultat)
-message_dechiffre = resultat[::-1]
+    message_dechiffre=resultat[::-1]
 
 print("message_dechiffre :", message_dechiffre)
