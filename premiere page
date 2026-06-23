@@ -9,18 +9,13 @@ cle={symbole: lettre for lettre, symbole in zip(alphabet, symboles)}
 
 message=""
 choix = [ ]
-<<<<<<< HEAD
-choix = input ("vous voulez chiffrer ou déchiffrer un message? (chiffrer/déchiffrer) : ").lower()
-if choix == 'chiffrer':
-        message = input("quel est le message que vous voulez chiffrer?")
-=======
+
 choix = input ("vous voulez chiffrer ou dechiffrer un message? (chiffrer/dechiffrer) : ").lower()
 
 
 
 if choix == ('chiffrer'):
     message = input("quel est le message que vous voulez chiffrer?")
->>>>>>> af3617eadace5e7a1a8ae62ef666faf2acdb47b7
       
 message = unicodedata.normalize("NFD", message)
 message = "".join(c for c in message if unicodedata.combining(c) == 0)
@@ -40,13 +35,9 @@ message_chiffre = resultat[::-1]
 print("Message chiffré :", message_chiffre)
 
 
-<<<<<<< HEAD
-if choix == 'déchiffrer':
-        message = input("quel est le message que vous voulez déchiffrer?")
-=======
+
 elif choix == ('dechiffrer'):
      message = input("quel est le message que vous voulez déchiffrer?")
->>>>>>> af3617eadace5e7a1a8ae62ef666faf2acdb47b7
 
 alphabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z", " "]
 symboles = ["¤",":",">","<","~","/",".","¨","#","+","=","_","-","°","^","{","@","§","&","%","?","!","µ","²","*", "e"]
