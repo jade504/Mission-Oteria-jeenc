@@ -1,9 +1,16 @@
 
 
+
+
+
 import random
 import unicodedata
 
-cle={"a":"¤","b":":","c":">","d":"<","f":"~","g":"/","h":".","i":"¨","j":"#","k":"+","l":"=","m":"_","n":"-","o":"°","p":"^","q":"{","r":"@","s":"§","t":"&","u":"%","v":"?","w":"!","x":"µ","y":"²","z":"*"}
+
+alphabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"," "]
+symboles = ["¤",":",">","<","~","/",".","¨","#","+","=","_","-","°","^","{","@","§","&","%","?","!","µ","²","*","e"]
+
+cle={lettre: symbole for lettre, symbole in zip(alphabet, symboles)}
 
 message = input("quel est le message que vous voulez chiffrer?").lower()
 
@@ -18,9 +25,16 @@ for caractere in message:
         nouveau_symbole = cle.get(caractere, "")
     resultat.append(nouveau_symbole)
 resultat = "".join(resultat)
-
-message = message.replace(" ", "e")
-
-
 message_chiffre = resultat[::-1]
+
 print("Message chiffré :", message_chiffre)
+
+
+
+
+
+
+
+
+
+
