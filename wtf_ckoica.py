@@ -1,7 +1,6 @@
-
-
-from random import choice
+from random import choice, shuffle
 import unicodedata
+import ast
 
 while True: 
 
@@ -14,16 +13,19 @@ while True:
 
     if choix == ('1'):
 
-        alphabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z", " ",".",",",";","!",":","?"]
-        symboles = ["¤",":",">","<","~","/",".","¨","#","+","=","_","-","°","^","{","@","§","&","%","?","!","µ","²","*", "e","a","b","c","d","f"]
-        cle={lettre: symbole for lettre, symbole in zip(alphabet, symboles)}
+        alphabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",".",",",";","!",":","?"]
+        symboles = ["¤",":",">","<","~","/",".","¨","#","+","=","_","-","°","^","{","@","§","&","%","?","!","µ","²","*","a","b","c","d","f"]
+        shuffle(symboles)
+        cle=({lettre: symbole for lettre, symbole in zip(alphabet, symboles)})
 
         message = input("quel est le message que vous voulez chiffrer?")
         message = unicodedata.normalize("NFD", message)
         message = "".join(c for c in message if unicodedata.combining(c) == 0)
         resultat = []
         for caractere in message:
-            if caractere == "e":
+            if caractere == " ":
+                nouveau_symbole = choice(["e"]) 
+            elif caractere == "e":
                 nouveau_symbole = choice(["$", "£"])
             else:
                 nouveau_symbole = cle.get(caractere, "")
@@ -31,20 +33,20 @@ while True:
         resultat = "".join(resultat)
         message_chiffre = resultat[::-1]
         print("Message chiffré :", message_chiffre)
+       
         demande=input("Voulez-vous enregistrer le message chiffré dans le fichier messchifrés.txt ? (oui/non) : ").lower()
         if demande == "oui":
             messchifrés = open("messchifrés.txt", "a")
             messchifrés.write(message_chiffre + "\n")
             messchifrés.close()
-            print("Le message chiffré a été enregistré dans le fichier messchifrés.txt.")
+            print("Le message chiffré a été enregistré dans le fichier messchifrés.txt. voici votre clé de chiffrement : ", cle)
         else:
-            print("Le message chiffré n'a pas été enregistré.")
+            print("Le message chiffré n'a pas été enregistré.Voici votre clé de chiffrement : ", cle)
 
     if choix == '2':
 
-        alphabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z", " ",".",",",";","!",":","?"]
-        symboles = ["¤",":",">","<","~","/",".","¨","#","+","=","_","-","°","^","{","@","§","&","%","?","!","µ","²","*", "e","a","b","c","d","f"]
-        cle = {symbole: lettre for symbole, lettre in zip(symboles, alphabet)}
+        cle = ast.literal_eval(input("Veuillez entrer la clé de chiffrement que vous avez utilisée pour chiffrer le message : "))
+        cle = {v: k for k, v in cle.items()} 
 
         demande2=input("Voulez-vous voir la liste des messages chiffrés enregistrés dans le fichier messchifrés.txt ? (oui/non) : ").lower()
         if demande2 == "oui":
@@ -66,7 +68,9 @@ while True:
             message_inverse = selectioné[::-1]
             resultat = []
             for caractere in message_inverse:
-                if caractere in ("$", "£"):
+                if caractere in ("e"):
+                    resultat.append(" ")
+                elif caractere in ("$", "£"):
                     resultat.append("e")
                 else:
                     resultat.append(cle.get(caractere, caractere))
@@ -79,7 +83,9 @@ while True:
             message_inverse = selectioné[::-1]
             resultat = []
             for caractere in message_inverse:
-                if caractere in ("$", "£"):
+                if caractere in ("e"):
+                    resultat.append(" ")
+                elif caractere in ("$", "£"):
                     resultat.append("e")
                 else:
                     resultat.append(cle.get(caractere, caractere))
@@ -91,10 +97,11 @@ while True:
         print("Au revoir !")
         open("messchifrés.txt", "w").close() 
         break
+
     else :
-        choix=input("Choix invalide. Veuillez entrer 'chiffrer', 'dechiffrer' ou 'quitter'.")
+        print("Choix invalide. Veuillez entrer '1', '2' ou 'quitter'.")
 
 
 
 
-        
+
