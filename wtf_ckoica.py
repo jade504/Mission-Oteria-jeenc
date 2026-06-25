@@ -89,5 +89,4 @@ while True:
         open("messchifrés.txt", "w").close()  # efface les messages sauvegardés à la fermeture
         break
 
-    else:
-        print("Choix invalide. Veuillez entrer '1', '2' ou 'quitter'.")
+
