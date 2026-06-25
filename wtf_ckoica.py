@@ -38,15 +38,17 @@ while True:
         print("Message chiffré :", message_chiffre)
 
         demande = input("Voulez-vous enregistrer le message ? (oui/non) : ").lower()
+
         if demande == "oui":
             with open("messchifrés.txt", "r") as fichier:
                 ancien_contenu = fichier.read()
        
-        nouveau_bloc = "".join(symboles) + "\n" + message_chiffre + "\n"
-
-        with open("messchifrés.txt", "w") as fichier:
-            fichier.write(nouveau_bloc + ancien_contenu)
-        print("Le message chiffré a été enregistré dans le fichier messchifrés.txt avec la clé de dechifrement.")
+            nouveau_bloc = "".join(symboles) + "\n" + message_chiffre + "\n"
+            with open("messchifrés.txt", "w") as fichier:
+                fichier.write(nouveau_bloc + ancien_contenu)
+            print("Le message chiffré a été enregistré dans le fichier messchifrés.txt avec la clé de dechifrement.")
+        else :
+            print("Message non enregistré. Voici votre clé :", cle)
 
     if choix == '2':
 
