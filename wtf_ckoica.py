@@ -39,36 +39,57 @@ while True:
 
         demande = input("Voulez-vous enregistrer le message ? (oui/non) : ").lower()
         if demande == "oui":
-            with open("messchifrés.txt", "a") as f:
-                f.write(message_chiffre + "\n")
-            print("Message enregistré ! Voici votre clé :", cle)  # l'utilisateur doit sauvegarder la clé
-        else:
-            print("Message non enregistré. Voici votre clé :", cle)
+            with open("messchifrés.txt", "r") as fichier:
+                ancien_contenu = fichier.read()
+       
+        nouveau_bloc = "".join(symboles) + "\n" + message_chiffre + "\n"
+
+        with open("messchifrés.txt", "w") as fichier:
+            fichier.write(nouveau_bloc + ancien_contenu)
+        print("Le message chiffré a été enregistré dans le fichier messchifrés.txt avec la clé de dechifrement.")
 
     if choix == '2':
 
-        # Reconvertit la clé collée en vrai dictionnaire, puis l'inverse (symbole → lettre)
-        cle = ast.literal_eval(input("Entrez votre clé de chiffrement : "))
-        cle = {v: k for k, v in cle.items()}
+       
 
         demande2 = input("Voulez-vous voir la liste des messages sauvegardés ? (oui/non) : ").lower()
 
         if demande2 == "oui":
-            with open("messchifrés.txt", "r") as f:
-                secretsmesschifrés = [line.strip() for line in f if line.strip()]
 
-            for i in range(len(secretsmesschifrés)):
-                print(str(i + 1) + ". " + secretsmesschifrés[i])
+            with open('messchifrés.txt', 'r') as fichier:
+                lignes = [line.strip() for line in fichier if line.strip()]
 
-            message = int(input("Quel est le message que vous voulez déchiffrer ? "))
+            if not lignes or len(lignes) % 2 != 0:
+                print("Le fichier est vide ou corrompu.")
+                continue
 
-            if 1 <= message <= len(secretsmesschifrés):
-                selectioné = secretsmesschifrés[message - 1]
+            nombre_messages = len(lignes) // 2
+            for i in range(nombre_messages):
+                msg_chiffre = lignes[(i * 2) + 1]
+                print(str(i + 1) + ". " + msg_chiffre)
+
+            choix_message = int(input("Quel est le numéro du message que vous voulez déchiffrer ? "))
+
+            if 1 <= choix_message <= nombre_messages:
+                index_cle = (choix_message - 1) * 2
+                index_msg = index_cle + 1
+
+                symboles_sauvegardes = lignes[index_cle]
+                selectioné = lignes[index_msg]
+
+                cle = dict(zip(symboles_sauvegardes, alphabet))
+
+
             else:
                 print("Numéro invalide.")
                 continue
 
         elif demande2 == "non":
+
+             # Reconvertit la clé collée en vrai dictionnaire, puis l'inverse (symbole → lettre)
+            cle = ast.literal_eval(input("Entrez votre clé de chiffrement : "))
+            cle = {v: k for k, v in cle.items()}
+
             selectioné = input("Entrez le message chiffré : ")
 
         # On inverse d'abord, puis on décode chaque symbole
@@ -88,5 +109,16 @@ while True:
         print("Au revoir !")
         open("messchifrés.txt", "w").close()  # efface les messages sauvegardés à la fermeture
         break
+
+
+
+
+
+
+
+
+
+
+
 
 
