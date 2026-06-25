@@ -71,9 +71,7 @@ while True:
 
     elif choix == 'quitter':
         print("Au revoir !")
-        messchifrés.clear()
+        open("messchifrés.txt", "w").close() 
         break
-
-
 
 
