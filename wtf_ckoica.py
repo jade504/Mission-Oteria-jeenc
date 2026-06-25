@@ -1,106 +1,93 @@
+#crée par jeenc
+#chiffrement de données
+
 from random import choice, shuffle
 import unicodedata
-import ast
+import ast  # utilisé pour reconvertir la clé (texte) en dictionnaire
 
 while True: 
 
-    message=""
-    choix = [ ]
-    choix = input ("vous voulez chiffrer (1) ou dechiffrer (2) un message? (pour arreter, tapez 'quitter') : ").lower()
+    message = ""
+    choix = input("Vous voulez chiffrer (1) ou dechiffrer (2) un message? (pour arreter, tapez 'quitter') : ").lower()
 
-    messchifrés = "messchifrés.txt"
-    mot_de_passe = []
+    if choix == '1':
 
-    if choix == ('1'):
-
+        # Associe chaque lettre à un symbole aléatoire
         alphabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",".",",",";","!",":","?"]
         symboles = ["¤",":",">","<","~","/",".","¨","#","+","=","_","-","°","^","{","@","§","&","%","?","!","µ","²","*","a","b","c","d","f"]
-        shuffle(symboles)
-        cle=({lettre: symbole for lettre, symbole in zip(alphabet, symboles)})
+        shuffle(symboles)  # clé différente à chaque fois
+        cle = {lettre: symbole for lettre, symbole in zip(alphabet, symboles)}
 
-        message = input("quel est le message que vous voulez chiffrer?")
+        message = input("Quel est le message que vous voulez chiffrer ? ")
+        # Supprime les accents (é → e, à → a, etc.)
         message = unicodedata.normalize("NFD", message)
         message = "".join(c for c in message if unicodedata.combining(c) == 0)
+
         resultat = []
         for caractere in message:
             if caractere == " ":
-                nouveau_symbole = choice(["e"]) 
+                nouveau_symbole = "e"                     # les espaces sont cachés en 'e'
             elif caractere == "e":
-                nouveau_symbole = choice(["$", "£"])
+                nouveau_symbole = choice(["$", "£"])      # le vrai 'e' devient $ ou £ aléatoirement
             else:
                 nouveau_symbole = cle.get(caractere, "")
             resultat.append(nouveau_symbole)
-        resultat = "".join(resultat)
-        message_chiffre = resultat[::-1]
+
+        # On inverse le résultat pour ajouter une couche de chiffrement
+        message_chiffre = "".join(resultat)[::-1]
         print("Message chiffré :", message_chiffre)
-       
-        demande=input("Voulez-vous enregistrer le message chiffré dans le fichier messchifrés.txt ? (oui/non) : ").lower()
+
+        demande = input("Voulez-vous enregistrer le message ? (oui/non) : ").lower()
         if demande == "oui":
-            messchifrés = open("messchifrés.txt", "a")
-            messchifrés.write(message_chiffre + "\n")
-            messchifrés.close()
-            print("Le message chiffré a été enregistré dans le fichier messchifrés.txt. voici votre clé de chiffrement : ", cle)
+            with open("messchifrés.txt", "a") as f:
+                f.write(message_chiffre + "\n")
+            print("Message enregistré ! Voici votre clé :", cle)  # l'utilisateur doit sauvegarder la clé
         else:
-            print("Le message chiffré n'a pas été enregistré.Voici votre clé de chiffrement : ", cle)
+            print("Message non enregistré. Voici votre clé :", cle)
 
     if choix == '2':
 
-        cle = ast.literal_eval(input("Veuillez entrer la clé de chiffrement que vous avez utilisée pour chiffrer le message : "))
-        cle = {v: k for k, v in cle.items()} 
+        # Reconvertit la clé collée en vrai dictionnaire, puis l'inverse (symbole → lettre)
+        cle = ast.literal_eval(input("Entrez votre clé de chiffrement : "))
+        cle = {v: k for k, v in cle.items()}
 
-        demande2=input("Voulez-vous voir la liste des messages chiffrés enregistrés dans le fichier messchifrés.txt ? (oui/non) : ").lower()
+        demande2 = input("Voulez-vous voir la liste des messages sauvegardés ? (oui/non) : ").lower()
+
         if demande2 == "oui":
-            print("vos chifrements")
-            messchifrés = open("messchifrés.txt", "r")
-            secretsmesschifrés = [line.strip() for line in messchifrés]
-            messchifrés.close()
+            with open("messchifrés.txt", "r") as f:
+                secretsmesschifrés = [line.strip() for line in f if line.strip()]
 
             for i in range(len(secretsmesschifrés)):
                 print(str(i + 1) + ". " + secretsmesschifrés[i])
 
-            choix = int(input("Quel est le message que vous voulez déchiffrer ? ").lower())
-            message = int(choix) 
-        
+            message = int(input("Quel est le message que vous voulez déchiffrer ? "))
+
             if 1 <= message <= len(secretsmesschifrés):
                 selectioné = secretsmesschifrés[message - 1]
-        
-        
-            message_inverse = selectioné[::-1]
-            resultat = []
-            for caractere in message_inverse:
-                if caractere in ("e"):
-                    resultat.append(" ")
-                elif caractere in ("$", "£"):
-                    resultat.append("e")
-                else:
-                    resultat.append(cle.get(caractere, caractere))
+            else:
+                print("Numéro invalide.")
+                continue
 
-            message_dechiffre = "".join(resultat)
-            print("Message déchiffré :", message_dechiffre)
+        elif demande2 == "non":
+            selectioné = input("Entrez le message chiffré : ")
 
-        if demande2 == "non":
-            selectioné = input("Vous avez choisi de ne pas voir la liste des messages chiffrés. Veuillez entrer le message chiffré que vous souhaitez déchiffrer.")
-            message_inverse = selectioné[::-1]
-            resultat = []
-            for caractere in message_inverse:
-                if caractere in ("e"):
-                    resultat.append(" ")
-                elif caractere in ("$", "£"):
-                    resultat.append("e")
-                else:
-                    resultat.append(cle.get(caractere, caractere))
+        # On inverse d'abord, puis on décode chaque symbole
+        message_inverse = selectioné[::-1]
+        resultat = []
+        for caractere in message_inverse:
+            if caractere == "e":
+                resultat.append(" ")        # 'e' était un espace caché
+            elif caractere in ("$", "£"):
+                resultat.append("e")        # $ ou £ était un vrai 'e'
+            else:
+                resultat.append(cle.get(caractere, caractere))
 
-            message_dechiffre = "".join(resultat)
-            print("Message déchiffré :", message_dechiffre)
+        print("Message déchiffré :", "".join(resultat))
 
     elif choix == 'quitter':
         print("Au revoir !")
-        open("messchifrés.txt", "w").close() 
+        open("messchifrés.txt", "w").close()  # efface les messages sauvegardés à la fermeture
         break
 
-    else :
+    else:
         print("Choix invalide. Veuillez entrer '1', '2' ou 'quitter'.")
-
-
-
-
